@@ -1,13 +1,12 @@
 // @ts-check
 import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
+import antfu from '@antfu/eslint-config'
 
 // Run `npx @eslint/config-inspector` to inspect the resolved config interactively
 export default createConfigForNuxt({
   features: {
-    // Rules for module authors
+    standalone: false,
     tooling: true,
-    // Rules for formatting
-    stylistic: true,
   },
   dirs: {
     src: [
@@ -15,6 +14,19 @@ export default createConfigForNuxt({
     ],
   },
 })
-  .append(
-    // your custom flat config here...
-  )
+  .append(antfu(
+    {},
+    {
+      rules: {
+        curly: ['error', 'all'],
+      },
+    },
+    {
+      // conflict with changelogen: remove after https://github.com/unjs/changelogen/issues/170
+      files: ['package.json'],
+      name: 'teages/changelogen-package-json',
+      rules: {
+        'style/eol-last': ['error', 'never'],
+      },
+    },
+  ))

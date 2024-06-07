@@ -28,38 +28,36 @@ npx nuxi module add @teages/nuxt-gqf
 
 That's it! You can now use Nuxt GQF in your Nuxt app ✨
 
-
 ## Contribution
 
 <details>
   <summary>Local development</summary>
-  
+
   ```bash
   # Install dependencies
   npm install
-  
+
   # Generate type stubs
   npm run dev:prepare
-  
+
   # Develop with the playground
   npm run dev
-  
+
   # Build the playground
   npm run dev:build
-  
+
   # Run ESLint
   npm run lint
-  
+
   # Run Vitest
   npm run test
   npm run test:watch
-  
+
   # Release new version
   npm run release
   ```
 
 </details>
-
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/@teages/nuxt-gqf/latest.svg?style=flat&colorA=020420&colorB=00DC82

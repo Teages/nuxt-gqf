@@ -1,10 +1,10 @@
 {
   "name": "@teages/nuxt-gqf",
+  "type": "module",
   "version": "1.0.0",
   "description": "A Nuxt binding for @teages/gqf",
-  "repository": "your-org/@teages/nuxt-gqf",
   "license": "MIT",
-  "type": "module",
+  "repository": "Teages/nuxt-gqf",
   "exports": {
     ".": {
       "types": "./dist/types.d.ts",
@@ -24,6 +24,7 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
@@ -33,6 +34,7 @@
     "@teages/gqf": "^0.1.1"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^2.20.0",
     "@nuxt/devtools": "^1.3.2",
     "@nuxt/eslint-config": "^0.3.13",
     "@nuxt/module-builder": "^0.7.0",
