@@ -1,5 +1,9 @@
 export default defineNuxtConfig({
   modules: ['../src/module'],
-  myModule: {},
+  gqf: {
+    clients: [
+      'https://graphql.anilist.co',
+    ],
+  },
   devtools: { enabled: true },
 })
