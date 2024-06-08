@@ -1,5 +1,5 @@
 import type { $enum } from '@teages/gqf'
-import { useSchema as _useSchema } from '@teages/gqf'
+import { useSchema } from '@teages/gqf'
 import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../../internal/utils/schema'
 
 export type { RequireQueryPart, ResultOf, VariablesOf } from '@teages/gqf'
@@ -26,11 +26,11 @@ export interface ServerUseSchemaWithWarning {
   $enum: typeof $enum
 }
 
-export function useSchema(): ServerUseSchema<string>
-export function useSchema<T extends ExactEndpoints>(endpoint: T): ServerUseSchema<T>
-export function useSchema(endpoint: string): ServerUseSchemaWithWarning
-export function useSchema<T extends Endpoints>(endpoint?: T): ServerUseSchema<T> {
-  const schema = _useSchema(endpoint) as {
+export function useGqfSchema(): ServerUseSchema<string>
+export function useGqfSchema<T extends ExactEndpoints>(endpoint: T): ServerUseSchema<T>
+export function useGqfSchema(endpoint: string): ServerUseSchemaWithWarning
+export function useGqfSchema<T extends Endpoints>(endpoint?: T): ServerUseSchema<T> {
+  const schema = useSchema(endpoint) as {
     gqf: LoadGQF<T>
     gqp: LoadGQP<T>
     $enum: DollarEnum

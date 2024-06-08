@@ -2,7 +2,7 @@ import { request } from 'graphql-request'
 
 const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
 
-const schema = useSchema(endpoint)
+const schema = useGqfSchema(endpoint)
 const { defineAsyncOperation } = withGqfClient(
   schema,
   ({ url, document, variables }, _context) => {

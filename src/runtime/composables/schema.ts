@@ -1,11 +1,11 @@
-import { useSchema as _useSchema } from '@teages/gqf'
+import { useSchema } from '@teages/gqf'
 import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../internal/utils/schema'
-import type { UseSchema, UseSchemaWithWarning } from '../internal/types/composables/schema'
+import type { UseGqfSchema, UseGqfSchemaWithWarning } from '../internal/types/composables/schema'
 
-export function useSchema(): UseSchema<string>
-export function useSchema<T extends ExactEndpoints>(endpoint: T): UseSchema<T>
-export function useSchema(endpoint: string): UseSchemaWithWarning
-export function useSchema<T extends Endpoints>(endpoint?: T): UseSchema<T> {
+export function useGqfSchema(): UseGqfSchema<string>
+export function useGqfSchema<T extends ExactEndpoints>(endpoint: T): UseGqfSchema<T>
+export function useGqfSchema(endpoint: string): UseGqfSchemaWithWarning
+export function useGqfSchema<T extends Endpoints>(endpoint?: T): UseGqfSchema<T> {
   if (import.meta.dev && endpoint) {
     // Check if the schema is defined in the config
     (async () => {
@@ -19,7 +19,7 @@ export function useSchema<T extends Endpoints>(endpoint?: T): UseSchema<T> {
     })()
   }
 
-  const schema = _useSchema(endpoint) as {
+  const schema = useSchema(endpoint) as {
     gqf: LoadGQF<T>
     gqp: LoadGQP<T>
     $enum: DollarEnum

@@ -4,7 +4,7 @@ import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../internal/utils/schema'
 import { request, subscribeSSERequest, subscribeWSRequest } from '../internal/utils/client'
-import type { UseSchema } from '../internal/types/composables/schema'
+import type { UseGqfSchema } from '../internal/types/composables/schema'
 import type { RequestHandler, SubscriptionHandler, WithGqfClient } from '../internal/types/composables/with-client'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useState } from '#app'
@@ -14,7 +14,7 @@ export function withGqfClient<
   Context = unknown,
   Endpoint extends Endpoints = string,
 >(
-  schema: UseSchema<Endpoint>,
+  schema: UseGqfSchema<Endpoint>,
   /**
    * Custom request handler.
    * By default it send the request using package `graphql-request` with `$fetch`.

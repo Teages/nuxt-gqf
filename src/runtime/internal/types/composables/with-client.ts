@@ -1,7 +1,7 @@
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../../utils/schema'
-import type { UseSchema } from './schema'
+import type { UseGqfSchema } from './schema'
 import type { AsyncData, AsyncDataOptions, KeysOf, PickFrom } from '#app/composables/asyncData'
 import type { Ref } from '#imports'
 
@@ -53,8 +53,8 @@ export interface DefineOperation<
   <TData, TVars extends Record<string, unknown>>(
     def: (
       | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
+        gqf: UseGqfSchema<Endpoint>['gqf'],
+        $enum: UseGqfSchema<Endpoint>['$enum'],
       ) => TypedDocumentNode<TData, TVars>)
       | TypedDocumentNode<TData, TVars>
     ),
@@ -75,8 +75,8 @@ export interface DefineAsyncOperation<
   > (
     def: (
       | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
+        gqf: UseGqfSchema<Endpoint>['gqf'],
+        $enum: UseGqfSchema<Endpoint>['$enum'],
       ) => TypedDocumentNode<TData, TVars>)
       | TypedDocumentNode<TData, TVars>
     ),
@@ -96,8 +96,8 @@ export interface DefineAsyncOperation<
   > (
     def: (
       | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
+        gqf: UseGqfSchema<Endpoint>['gqf'],
+        $enum: UseGqfSchema<Endpoint>['$enum'],
       ) => TypedDocumentNode<TData, TVars>)
       | TypedDocumentNode<TData, TVars>
     ),
@@ -116,8 +116,8 @@ export interface DefineSubscription<
   <TData, TVars extends Record<string, unknown>>(
     def: (
       | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
+        gqf: UseGqfSchema<Endpoint>['gqf'],
+        $enum: UseGqfSchema<Endpoint>['$enum'],
       ) => TypedDocumentNode<TData, TVars>)
       | TypedDocumentNode<TData, TVars>
     ),

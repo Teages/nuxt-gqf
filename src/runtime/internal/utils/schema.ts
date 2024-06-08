@@ -1,6 +1,5 @@
 import type { Schemas } from '@teages/gqf/schema'
 import type { $enum } from '@teages/gqf'
-import { useSchema as _useSchema } from '@teages/gqf'
 import type { LoadFromUrl } from '@teages/gqf/cli'
 import type { GraphQueryFunction, GraphQueryPartial } from '@teages/gqf/typed'
 import type { gqf, gqp } from '@teages/gqf/core'

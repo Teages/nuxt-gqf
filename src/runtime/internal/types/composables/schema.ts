@@ -1,7 +1,7 @@
 import type { $enum } from '@teages/gqf'
 import type { Endpoints, LoadGQF, LoadGQP } from '../../utils/schema'
 
-export interface UseSchema<
+export interface UseGqfSchema<
   TEndpoint extends Endpoints,
 > {
   endpoint?: TEndpoint
@@ -10,7 +10,7 @@ export interface UseSchema<
   $enum: typeof $enum
 }
 
-export interface UseSchemaWithWarning {
+export interface UseGqfSchemaWithWarning {
   endpoint?: string
   /**
    * @deprecated The schema is not typed.
