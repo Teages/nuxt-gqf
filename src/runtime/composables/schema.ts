@@ -1,28 +1,6 @@
-import type { $enum } from '@teages/gqf'
 import { useSchema as _useSchema } from '@teages/gqf'
 import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../internal/utils/schema'
-
-export interface UseSchema<
-  TEndpoint extends Endpoints,
-> {
-  endpoint?: TEndpoint
-  gqf: LoadGQF<TEndpoint>
-  gqp: LoadGQP<TEndpoint>
-  $enum: typeof $enum
-}
-
-export interface UseSchemaWithWarning {
-  endpoint?: string
-  /**
-   * @deprecated The schema is not typed.
-   */
-  gqf: LoadGQF<string>
-  /**
-   * @deprecated The schema is not typed.
-   */
-  gqp: LoadGQP<string>
-  $enum: typeof $enum
-}
+import type { UseSchema, UseSchemaWithWarning } from '../internal/types/composables/schema'
 
 export function useSchema(): UseSchema<string>
 export function useSchema<T extends ExactEndpoints>(endpoint: T): UseSchema<T>

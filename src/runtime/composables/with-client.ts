@@ -1,11 +1,12 @@
-import type { ResultOf, TypedDocumentNode } from '@graphql-typed-document-node/core'
+import type { ResultOf } from '@graphql-typed-document-node/core'
 import { hash } from 'ohash'
 import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../internal/utils/schema'
 import { request, subscribeSSERequest, subscribeWSRequest } from '../internal/utils/client'
-import type { UseSchema } from './schema'
-import { type AsyncData, type AsyncDataOptions, type KeysOf, type PickFrom, useAsyncData } from '#app/composables/asyncData'
+import type { UseSchema } from '../internal/types/composables/schema'
+import type { RequestHandler, SubscriptionHandler, WithGqfClient } from '../internal/types/composables/with-client'
+import { useAsyncData } from '#app/composables/asyncData'
 import { useState } from '#app'
 import { readonly, watch } from '#imports'
 
@@ -260,155 +261,4 @@ function getDocumentType(doc: DocumentNode) {
   }
 
   return type
-}
-
-type RequestHandler<Context> = <
-  TData,
-  TVars extends Record<string, unknown>,
-> (
-  query: {
-    document: TypedDocumentNode<TData, TVars>
-    variables: TVars
-    type: 'query' | 'mutation'
-    url: string
-  },
-  context?: Context
-) => Promise<TData>
-
-type SubscriptionHandler<Context> = <
-  TData,
-  TVars extends Record<string, unknown>,
-> (
-  func: {
-    update: (data: TData, isFinal?: boolean) => void
-    close: (error?: any) => void
-    onUnsubscribe: (fn: () => void) => void
-  },
-  query: {
-    document: TypedDocumentNode<TData, TVars>
-    variables: TVars
-    type: 'subscription'
-    url: string
-  },
-  context?: Context
-) => void
-
-interface WithGqfClient<
-  Context,
-  Endpoint extends Endpoints = string,
-> {
-  defineOperation: DefineOperation<Context, Endpoint>
-  defineAsyncOperation: DefineAsyncOperation<Context, Endpoint>
-  defineLazyAsyncOperation: DefineAsyncOperation<Context, Endpoint>
-  defineSubscription: DefineSubscription<Context, Endpoint>
-}
-
-interface DefineOperation<
-  Context,
-  Endpoint extends Endpoints = string,
-> {
-  <TData, TVars extends Record<string, unknown>>(
-    def: (
-      | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
-      ) => TypedDocumentNode<TData, TVars>)
-      | TypedDocumentNode<TData, TVars>
-    ),
-    context?: Context,
-  ): DefineOperationReturn<Promise<TData>, TVars, Context>
-}
-
-interface DefineAsyncOperation<
-  Context,
-  Endpoint extends Endpoints = string,
-> {
-  <
-    TData,
-    TVars extends Record<string, unknown>,
-    DataT = TData | undefined,
-    PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
-    DefaultT = null,
-  > (
-    def: (
-      | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
-      ) => TypedDocumentNode<TData, TVars>)
-      | TypedDocumentNode<TData, TVars>
-    ),
-    context?: Context,
-  ): DefineAsyncOperationReturn<
-    AsyncData<PickFrom<DataT, PickKeys> | DefaultT, Error | null>,
-    TVars,
-    AsyncDataOptions<TData | undefined, DataT, PickKeys, DefaultT> & { context?: Context }
-  >
-
-  <
-    TData,
-    TVars extends Record<string, unknown>,
-    DataT = TData | undefined,
-    PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
-    DefaultT = DataT,
-  > (
-    def: (
-      | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
-      ) => TypedDocumentNode<TData, TVars>)
-      | TypedDocumentNode<TData, TVars>
-    ),
-    context?: Context,
-  ): DefineAsyncOperationReturn<
-    AsyncData<PickFrom<DataT, PickKeys> | DefaultT, Error | null>,
-    TVars,
-    AsyncDataOptions<TData | undefined, DataT, PickKeys, DefaultT> & { context?: Context }
-  >
-}
-
-interface DefineSubscription<
-  Context,
-  Endpoint extends Endpoints = string,
-> {
-  <TData, TVars extends Record<string, unknown>>(
-    def: (
-      | ((
-        gqf: UseSchema<Endpoint>['gqf'],
-        $enum: UseSchema<Endpoint>['$enum'],
-      ) => TypedDocumentNode<TData, TVars>)
-      | TypedDocumentNode<TData, TVars>
-    ),
-    context?: Context,
-  ): DefineSubscriptionReturn<TData, TVars, Context>
-}
-
-type DefineOperationReturn<Ret, TVars, Context> =
-  Record<string, never> extends TVars
-    ? (variables?: TVars, context?: Context) => Ret
-    : (variables: TVars, context?: Context) => Ret
-
-type DefineAsyncOperationReturn<Ret, TVars, Options> =
-  Record<string, never> extends TVars
-    ? (variables?: TVars, options?: Options) => Ret
-    : (variables: TVars, options?: Options) => Ret
-
-type DefineSubscriptionReturn<Ret, TVars, Context> =
-  Record<string, never> extends TVars
-    ? (variables?: TVars, options?: Context) => Promise<SubscriptionReturn<Ret>>
-    : (variables: TVars, options?: Context) => Promise<SubscriptionReturn<Ret>>
-
-interface SubscriptionReturn<TData> {
-  state: ComputedRef<'pending' | 'connected' | 'closed'>
-  data: ComputedRef<TData | undefined>
-  error: ComputedRef<Error | null>
-  unsubscribe: () => void
-  /**
-   * Close the current subscription and reconnect.
-   */
-  restart: () => Promise<void>
-  /**
-   * Keep the current subscription alive and seamless switch to a new one.
-   * This is useful when you have a connection time limit.
-   */
-  refresh: () => Promise<void>
 }
