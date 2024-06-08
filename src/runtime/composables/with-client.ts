@@ -59,7 +59,7 @@ export function withGqfClient<
       }
 
       return (
-        variables: MaybeRefOrGetter<VariablesOf<typeof document>>,
+        variables?: MaybeRefOrGetter<VariablesOf<typeof document>>,
         options?: any,
       ) => {
         const key = hash({ document, variables })
@@ -67,7 +67,12 @@ export function withGqfClient<
         return useAsyncData(
           key,
           () => handler(
-            { document, variables: toValue(variables), url, type },
+            {
+              document,
+              variables: toValue(variables) ?? {} as VariablesOf<typeof document>,
+              url,
+              type,
+            },
             {
               ...context,
               ...options?.context,
@@ -85,7 +90,7 @@ export function withGqfClient<
       }
 
       return (
-        variables: MaybeRefOrGetter<VariablesOf<typeof document>>,
+        variables?: MaybeRefOrGetter<VariablesOf<typeof document>>,
         options?: any,
       ) => {
         const key = hash({ document, variables })
@@ -93,7 +98,12 @@ export function withGqfClient<
         return useAsyncData(
           key,
           () => handler(
-            { document, variables: toValue(variables), url, type },
+            {
+              document,
+              variables: toValue(variables) ?? {} as VariablesOf<typeof document>,
+              url,
+              type,
+            },
             {
               ...context,
               ...options?.context,
