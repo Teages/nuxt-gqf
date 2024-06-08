@@ -1,19 +1,6 @@
 import type { $enum } from '@teages/gqf'
 import { useSchema as _useSchema } from '@teages/gqf'
-import type { LoadFromUrl } from '@teages/gqf/cli'
-import type { GraphQueryFunction, GraphQueryPartial } from '@teages/gqf/typed'
-import type { gqf, gqp } from '@teages/gqf/core'
-import type { Endpoints } from '../internal/utils/schema'
-
-type DollarEnum = typeof $enum
-
-type LoadGQF<T extends Endpoints> = LoadFromUrl<T> extends undefined
-  ? typeof gqf
-  : GraphQueryFunction<NonNullable<LoadFromUrl<T>>>
-
-type LoadGQP<T extends Endpoints> = LoadFromUrl<T> extends undefined
-  ? typeof gqp
-  : GraphQueryPartial<NonNullable<LoadFromUrl<T>>>
+import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../internal/utils/schema'
 
 export interface UseSchema<
   TEndpoint extends Endpoints,
@@ -24,6 +11,22 @@ export interface UseSchema<
   $enum: typeof $enum
 }
 
+export interface UseSchemaWithWarning {
+  endpoint?: string
+  /**
+   * @deprecated The schema is not typed.
+   */
+  gqf: LoadGQF<string>
+  /**
+   * @deprecated The schema is not typed.
+   */
+  gqp: LoadGQP<string>
+  $enum: typeof $enum
+}
+
+export function useSchema(): UseSchema<string>
+export function useSchema<T extends ExactEndpoints>(endpoint: T): UseSchema<T>
+export function useSchema(endpoint: string): UseSchemaWithWarning
 export function useSchema<T extends Endpoints>(endpoint?: T): UseSchema<T> {
   if (import.meta.dev && endpoint) {
     // Check if the schema is defined in the config
