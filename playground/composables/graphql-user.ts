@@ -18,3 +18,11 @@ export const useAsyncUser = defineAsyncOperation(
     user: $ => $({ id: $.id }, [{ ...userFragment($) }]),
   }]),
 )
+
+export const useHello = defineAsyncOperation(
+  gqf => gqf('query QueryHello', {
+    name: 'String',
+  }, [{
+    hello: $ => $({ name: $.name }, true),
+  }]),
+)

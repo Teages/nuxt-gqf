@@ -3,6 +3,7 @@ import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../../utils/schema'
 import type { UseSchema } from './schema'
 import type { AsyncData, AsyncDataOptions, KeysOf, PickFrom } from '#app/composables/asyncData'
+import type { Ref } from '#imports'
 
 export type RequestHandler<Context> = <
   TData,
@@ -10,7 +11,7 @@ export type RequestHandler<Context> = <
 > (
   query: {
     document: TypedDocumentNode<TData, TVars>
-    variables: TVars
+    variables: NoInfer<TVars>
     type: 'query' | 'mutation'
     url: string
   },
@@ -28,7 +29,7 @@ export type SubscriptionHandler<Context> = <
   },
   query: {
     document: TypedDocumentNode<TData, TVars>
-    variables: TVars
+    variables: NoInfer<TVars>
     type: 'subscription'
     url: string
   },
@@ -131,8 +132,29 @@ export type DefineOperationReturn<Ret, TVars, Context> =
 
 export type DefineAsyncOperationReturn<Ret, TVars, Options> =
   Record<string, never> extends TVars
-    ? (variables?: TVars, options?: Options) => Ret
-    : (variables: TVars, options?: Options) => Ret
+    ? DefineAsyncOperationReturnFnE<Ret, TVars, Options>
+    : DefineAsyncOperationReturnFn<Ret, TVars, Options>
+
+export interface DefineAsyncOperationReturnFn<Ret, TVars, Options> {
+  (
+    variables: TVars,
+    options?: Omit<Options, 'watch'> // Force to use getter if watched.
+  ): Ret
+  (
+    variables: Ref<TVars> | (() => TVars),
+    options?: Options
+  ): Ret
+}
+export interface DefineAsyncOperationReturnFnE<Ret, TVars, Options> {
+  (
+    variables?: TVars,
+    options?: Omit<Options, 'watch'> // Force to use getter if watched.
+  ): Ret
+  (
+    variables?: Ref<TVars> | (() => TVars),
+    options?: Options
+  ): Ret
+}
 
 export type DefineSubscriptionReturn<Ret, TVars, Context> =
   Record<string, never> extends TVars

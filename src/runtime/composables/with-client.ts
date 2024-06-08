@@ -1,4 +1,4 @@
-import type { ResultOf } from '@graphql-typed-document-node/core'
+import type { ResultOf, VariablesOf } from '@graphql-typed-document-node/core'
 import { hash } from 'ohash'
 import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'
@@ -8,7 +8,7 @@ import type { UseSchema } from '../internal/types/composables/schema'
 import type { RequestHandler, SubscriptionHandler, WithGqfClient } from '../internal/types/composables/with-client'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useState } from '#app'
-import { readonly, watch } from '#imports'
+import { type MaybeRefOrGetter, readonly, toValue, watch } from '#imports'
 
 export function withGqfClient<
   Context = unknown,
@@ -58,13 +58,16 @@ export function withGqfClient<
         throw new Error('Subscriptions are not supported')
       }
 
-      return (variables?: any, options?: any) => {
+      return (
+        variables: MaybeRefOrGetter<VariablesOf<typeof document>>,
+        options?: any,
+      ) => {
         const key = hash({ document, variables })
 
         return useAsyncData(
           key,
           () => handler(
-            { document, variables, url, type },
+            { document, variables: toValue(variables), url, type },
             {
               ...context,
               ...options?.context,
@@ -81,13 +84,16 @@ export function withGqfClient<
         throw new Error('Subscriptions are not supported')
       }
 
-      return (variables?: any, options?: any) => {
+      return (
+        variables: MaybeRefOrGetter<VariablesOf<typeof document>>,
+        options?: any,
+      ) => {
         const key = hash({ document, variables })
 
         return useAsyncData(
           key,
           () => handler(
-            { document, variables, url, type },
+            { document, variables: toValue(variables), url, type },
             {
               ...context,
               ...options?.context,
