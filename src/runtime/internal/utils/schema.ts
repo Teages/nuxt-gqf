@@ -1,3 +1,4 @@
 import type { Schemas } from '@teages/gqf/schema'
 
-export type Endpoints = string | keyof Schemas
+export type ExactEndpoints = keyof Schemas
+export type Endpoints = string | ExactEndpoints
