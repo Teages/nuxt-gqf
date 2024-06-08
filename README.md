@@ -5,7 +5,7 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-A Nuxt binding for @teages/gqf for doing amazing things.
+A Nuxt binding for @teages/gqf.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 - [🏀 Online playground](https://stackblitz.com/github/Teages/nuxt-gqf?file=playground%2Fapp.vue)
