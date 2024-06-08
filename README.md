@@ -36,7 +36,7 @@ yarn add @teages/nuxt-gqf
 # Using pnpm
 pnpm add @teages/nuxt-gqf
 
-# Using npm
+# Using bun
 bun install @teages/nuxt-gqf
 ```
 
