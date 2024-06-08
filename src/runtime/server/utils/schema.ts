@@ -2,6 +2,8 @@ import type { $enum } from '@teages/gqf'
 import { useSchema as _useSchema } from '@teages/gqf'
 import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../../internal/utils/schema'
 
+export type { RequireQueryPart, ResultOf, VariablesOf } from '@teages/gqf'
+
 export interface ServerUseSchema<
   TEndpoint extends Endpoints,
 > {
