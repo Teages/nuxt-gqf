@@ -8,18 +8,55 @@
 A Nuxt binding for @teages/gqf for doing amazing things.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/@teages/nuxt-gqf?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
+- [🏀 Online playground](https://stackblitz.com/github/Teages/nuxt-gqf?file=playground%2Fapp.vue)
+- [📖 &nbsp;Documentation](https://gqf.teages.xyz/ecosystem/nuxt)
 
 ## Features
 
 <!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- 🔒 &nbsp;Write queries with type safety and type hints.
+- 🚀 &nbsp;No need to scan your source code, no code generation during HMR.
+- ❤️ &nbsp;he experience of using gqf is very similar to writing plain GraphQL queries.
+- 🌐 &nbsp;Working for most clients with TypedDocumentNode.
 
 ## Quick Setup
 
+1. Add `@teages/nuxt-gqf` dependency to your project
+
+```bash
+# ✨ Auto-detect
+npx nypm install @teages/nuxt-gqf
+
+# Using npm
+npm install @teages/nuxt-gqf
+
+# Using yarn
+yarn add @teages/nuxt-gqf
+
+# Using pnpm
+pnpm add @teages/nuxt-gqf
+
+# Using npm
+bun install @teages/nuxt-gqf
+```
+
+2. Add `@teages/nuxt-gqf` to the `modules` section of `nuxt.config.ts`, and configure it:
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@teages/nuxt-gqf'
+  ],
+
+  gqf: {
+    clients: [
+      'https://your-graphql-endpoint',
+    ],
+  },
+})
+```
+
+<!-- TODO: Add the module to Nuxt Modules Store
 Install the module to your Nuxt application with one command:
 
 ```bash
@@ -27,7 +64,7 @@ npx nuxi module add @teages/nuxt-gqf
 ```
 
 That's it! You can now use Nuxt GQF in your Nuxt app ✨
-
+ -->
 ## Contribution
 
 <details>
