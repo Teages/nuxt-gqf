@@ -1,7 +1,10 @@
-import MyModule from '../../../src/module'
+import NuxtGQF from '../../../src/module'
 
 export default defineNuxtConfig({
-  modules: [
-    MyModule,
-  ],
+  modules: [NuxtGQF],
+  gqf: {
+    clients: [
+      'https://graphql-test.teages.xyz/graphql-user',
+    ],
+  },
 })

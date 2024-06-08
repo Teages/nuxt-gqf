@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   modules: ['../src/module'],
   gqf: {
     clients: [
-      'https://graphql.anilist.co',
+      'https://graphql-test.teages.xyz/graphql-user',
     ],
   },
   devtools: { enabled: true },
