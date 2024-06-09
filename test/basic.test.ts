@@ -17,13 +17,15 @@ describe('basic', async () => {
     // Get response to a server-rendered page with `$fetch`.
     const ret = await $fetch('/api')
     expect(ret).toMatchObject({
-      data: [
-        {
-          id: '1',
-          name: 'Teages',
-          __typename: 'User',
-        },
-      ],
+      data: {
+        users: [
+          {
+            id: '1',
+            name: 'Teages',
+            __typename: 'User',
+          },
+        ],
+      },
     })
   })
 })

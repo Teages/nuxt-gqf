@@ -26,15 +26,25 @@ export function createHandler(options?: HandlerOptions) {
       ...ctx?.headers,
       'Content-Type': 'application/json',
     }
+
+    const preferMethod = ctx?.preferMethod ?? opts?.preferMethod ?? 'POST'
+    const method = query.type === 'query'
+      ? preferMethod
+      : 'POST'
+
+    const body = {
+      query: print(query.document),
+      variables: query.variables,
+    }
+
     const res = await $fetch<{ data: TData }>(query.url, {
       ...opts,
       ...ctx,
-      method: 'POST',
+      method,
       headers,
-      body: JSON.stringify({
-        query: print(query.document),
-        variables: query.variables,
-      }),
+      ...(
+        method === 'POST' ? { body } : { query: body }
+      ),
     })
     return res.data
   }
@@ -114,7 +124,19 @@ export type CreateSubscriptionHandlerOptions = {
 }
 
 export interface HandlerOptions {
-  fetchOptions?: MaybeRefOrGetter<Omit<FetchOptions, 'url'>>
+  /**
+   * Options of `$fetch`
+   */
+  fetchOptions?: MaybeRefOrGetter<
+    Omit<FetchOptions, 'url' | 'method'> & {
+      /**
+       * Default method to use for queries.
+       * Only effective when `type` is `'query'`.
+       * @default 'POST'
+       */
+      preferMethod?: 'POST' | 'GET'
+    }
+  >
 }
 
 export interface SSEOptions {

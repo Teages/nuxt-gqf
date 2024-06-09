@@ -1,4 +1,5 @@
-import { request } from 'graphql-request'
+import type { ResultOf } from '@graphql-typed-document-node/core'
+import { print } from 'graphql'
 
 export default defineLazyEventHandler(() => {
   const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
@@ -13,11 +14,16 @@ export default defineLazyEventHandler(() => {
   }])
 
   return defineEventHandler(async () => {
-    const { users } = await request({
-      url: endpoint,
-      document: query,
+    const { data } = await $fetch<{ data: ResultOf<typeof query> }>(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        query: print(query),
+      },
     })
 
-    return { data: users }
+    return { data }
   })
 })

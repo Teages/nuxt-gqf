@@ -48,7 +48,6 @@
     "@types/node": "^20.14.1",
     "changelogen": "^0.5.5",
     "eslint": "^9.4.0",
-    "graphql-request": "^7.0.1",
     "nuxt": "^3.11.2",
     "typescript": "latest",
     "vitest": "^1.6.0",

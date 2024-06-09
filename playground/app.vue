@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { data } = await useAsyncUser({ id: '1' })
-
 const nameList = ['Alice', 'Bob', 'Charlie', 'Teages']
 const name = ref(nameList[0])
 function changeName() {
@@ -8,23 +6,26 @@ function changeName() {
   name.value = nameList[(index + 1) % nameList.length]
 }
 
-const { data: hello } = await useHello(
+const { data: msg } = await useAsyncHello(
   () => ({ name: name.value }),
-  {
-    watch: [name],
-  },
+  { watch: [name] },
 )
+
+const { data, error } = await useAsyncUser({ id: '1' })
 </script>
 
 <template>
   <div>
-    {{ hello?.hello }}
+    {{ msg?.hello }}
     <button @click="changeName">
       Change
     </button>
   </div>
   <div v-if="data">
     <User :user="data.user" />
+  </div>
+  <div v-else-if="error">
+    Error: {{ error }}
   </div>
   <div v-else>
     Loading...

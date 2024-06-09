@@ -6,18 +6,14 @@ import type { UseGqfSchema } from './schema'
 import type { AsyncData, AsyncDataOptions, KeysOf, PickFrom } from '#app/composables/asyncData'
 import type { Ref } from '#imports'
 
+// rename the type
 export type DefaultHandlerOptions = Omit<HandlerOptions, ''>
 
 export interface WithGqfClientOptions<
   Context,
   SubscriptionContext,
 > {
-  handler?: RequestHandler<Context> | {
-    /**
-     * Config the default request handler.
-     */
-    options?: DefaultHandlerOptions
-  }
+  handler?: RequestHandler<Context> | DefaultHandlerOptions
   subscription?:
     | ({
       /**

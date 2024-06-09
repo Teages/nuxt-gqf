@@ -29,7 +29,7 @@ export function withGqfClient<
 
   const handler = typeof options?.handler === 'function'
     ? options.handler
-    : createHandler(options?.handler?.options)
+    : createHandler(options?.handler)
 
   const subscriptionHandler = typeof options?.subscription?.handler === 'function'
     ? options.subscription.handler
