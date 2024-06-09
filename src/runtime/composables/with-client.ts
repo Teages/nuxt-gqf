@@ -124,7 +124,11 @@ export function withGqfClient<
       }
 
       return async (variables?: any, contextRewrite?: any) => {
-        const key = hash({ document, variables })
+        const key = import.meta.client
+          ? crypto.randomUUID()
+          // the function should not call in SSR,
+          // but it's better to have a unique key as fallback
+          : hash({ document, variables })
         const cache = useState<ResultOf<typeof document> | undefined>(key, () => undefined)
         const error = useState<Error | null>(`${key}-error`, () => null)
         const state = useState<'pending' | 'connected' | 'closed'>(`${key}-state`, () => 'pending')
@@ -139,7 +143,9 @@ export function withGqfClient<
             hooks.onUnsubscribe.forEach(fn => fn())
           }
           catch (error) { console.error(error) }
-          console.error(e)
+          if (e) {
+            console.error(e)
+          }
         }
 
         const update = (
@@ -185,6 +191,9 @@ export function withGqfClient<
           // subscription should only be used in the browser
           // to avoid duplicated requests
           if (!import.meta.client) {
+            if (import.meta.dev) {
+              console.warn('Subscription is not supported during SSR')
+            }
             return resolve()
           }
 
