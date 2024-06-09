@@ -133,12 +133,13 @@ export function withGqfClient<
           onUnsubscribe: [] as Array<() => void>,
         }
 
-        const close = () => {
+        const close = (e?: any) => {
           state.value = 'closed'
           try {
             hooks.onUnsubscribe.forEach(fn => fn())
           }
-          catch (error) { /* ignore */ }
+          catch (error) { console.error(error) }
+          console.error(e)
         }
 
         const update = (
@@ -235,7 +236,7 @@ export function withGqfClient<
               try {
                 oldUnsubscribe.forEach(fn => fn())
               }
-              catch (error) { /* ignore */ }
+              catch (error) { console.error(error) }
             })
             .catch(reject)
         })
