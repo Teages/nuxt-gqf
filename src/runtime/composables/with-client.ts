@@ -3,37 +3,52 @@ import { hash } from 'ohash'
 import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../internal/utils/schema'
-import { request, subscribeSSERequest, subscribeWSRequest } from '../internal/utils/client'
+import { type CreateSubscriptionHandlerOptions, type HandlerOptions, type SSEOptions, type WSOptions, createHandler, createSubscriptionHandler } from '../internal/utils/client'
 import type { UseGqfSchema } from '../internal/types/composables/schema'
 import type { RequestHandler, SubscriptionHandler, WithGqfClient } from '../internal/types/composables/with-client'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useState } from '#app'
 import { type MaybeRefOrGetter, readonly, toValue, watch } from '#imports'
 
+type DefaultSubscriptionHandlerOptions = WSOptions & SSEOptions
+type DefaultHandlerOptions = Omit<HandlerOptions, 'url'>
+
 export function withGqfClient<
-  Context = unknown,
+  Context = DefaultHandlerOptions,
+  SubscriptionContext = DefaultSubscriptionHandlerOptions,
   Endpoint extends Endpoints = string,
 >(
   schema: UseGqfSchema<Endpoint>,
   /**
    * Custom request handler.
-   * By default it send the request using package `graphql-request` with `$fetch`.
+   * By default it send the request using `$fetch`.
    */
-  handler: RequestHandler<Context> = request,
+  handlerDef: RequestHandler<Context> | DefaultHandlerOptions = {},
   /**
    * Custom subscription handler.
-   * By default it uses package `graphql-sse`.
-   * - `sse`: use `graphql-sse` package.
-   * - `ws`: use `graphql-ws` package.
+   * By default it uses `sse`.
    * - `SubscriptionHandler<Context>`: use custom subscription handler.
+   * - `{ type: 'SSE', sseOptions?: SSEOptions }`: use `sse` with custom options.
+   * - `{ type: 'WS', wsOptions?: WSOptions }`: use `ws` with custom options.
    */
-  subscriptionHandler: SubscriptionHandler<Context> | 'sse' | 'ws' = 'sse',
+  subscriptionHandlerDef:
+    | SubscriptionHandler<SubscriptionContext>
+    | CreateSubscriptionHandlerOptions
+  = {},
 ): WithGqfClient<Context, Endpoint> {
   const url = schema.endpoint
 
   if (!url) {
     throw new Error('Endpoint is not defined')
   }
+
+  const handler = typeof handlerDef === 'function'
+    ? handlerDef
+    : createHandler(handlerDef)
+
+  const subscriptionHandler = typeof subscriptionHandlerDef === 'function'
+    ? subscriptionHandlerDef
+    : createSubscriptionHandler(subscriptionHandlerDef)
 
   return {
     defineOperation: (def, context) => {
@@ -123,11 +138,6 @@ export function withGqfClient<
         throw new Error('Operation is not a subscription')
       }
 
-      const handler = typeof subscriptionHandler === 'function'
-        ? subscriptionHandler
-        : subscriptionHandler === 'ws'
-          ? subscribeWSRequest
-          : subscribeSSERequest
       return async (variables?: any, contextRewrite?: any) => {
         const key = hash({ document, variables })
         const cache = useState<ResultOf<typeof document> | undefined>(key, () => undefined)
@@ -202,7 +212,7 @@ export function withGqfClient<
           // start the subscription
           error.value = null
           try {
-            handler(
+            subscriptionHandler(
               { update, onUnsubscribe, close },
               { document, variables, url, type },
               {
