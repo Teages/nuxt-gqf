@@ -87,6 +87,7 @@ export function createSubscriptionHandler(
       })()
     }
   }
+
   return (func, query, context?: SSEOptions) => {
     const ctx = {
       ...toValue(options.options?.sseOptions),
@@ -98,6 +99,9 @@ export function createSubscriptionHandler(
     url.searchParams.set('variables', JSON.stringify(query.variables ?? {}))
 
     const source = new EventSource(url, ctx)
+    func.onUnsubscribe(() => {
+      source.close()
+    })
 
     source.addEventListener('next', ({ data }) => {
       func.update(
