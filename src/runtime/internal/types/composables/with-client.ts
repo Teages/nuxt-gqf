@@ -1,9 +1,55 @@
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../../utils/schema'
+import type { HandlerOptions, SSEOptions, WSOptions } from '../../utils/client'
 import type { UseGqfSchema } from './schema'
 import type { AsyncData, AsyncDataOptions, KeysOf, PickFrom } from '#app/composables/asyncData'
 import type { Ref } from '#imports'
+
+export type DefaultHandlerOptions = Omit<HandlerOptions, ''>
+
+export interface WithGqfClientOptions<
+  Context,
+  SubscriptionContext,
+> {
+  handler?: RequestHandler<Context> | {
+    /**
+     * Config the default request handler.
+     */
+    options?: DefaultHandlerOptions
+  }
+  subscription?:
+    | ({
+      /**
+       * Override the default subscription handler.
+       * By default it use EventSource
+       * - `SubscriptionHandler`: Custom subscription handler.
+       * - `ws`: Use websocket handler from package `graphql-ws`.
+       * - `sse`: Use default sse handler.
+       */
+      handler?: 'sse'
+    } & SSEOptions)
+    | ({
+      /**
+       * Override the default subscription handler.
+       * By default it use EventSource
+       * - `SubscriptionHandler`: Custom subscription handler.
+       * - `ws`: Use websocket handler from package `graphql-ws`.
+       * - `sse`: Use default sse handler.
+       */
+      handler: 'ws'
+    } & WSOptions)
+    | {
+      /**
+       * Override the default subscription handler.
+       * By default it use EventSource
+       * - `SubscriptionHandler`: Custom subscription handler.
+       * - `ws`: Use websocket handler from package `graphql-ws`.
+       * - `sse`: Use default sse handler.
+       */
+      handler: SubscriptionHandler<SubscriptionContext>
+    }
+}
 
 export type RequestHandler<Context> = <
   TData,

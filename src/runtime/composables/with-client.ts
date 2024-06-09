@@ -3,15 +3,15 @@ import { hash } from 'ohash'
 import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'
 import type { Endpoints } from '../internal/utils/schema'
-import { type CreateSubscriptionHandlerOptions, type HandlerOptions, type SSEOptions, type WSOptions, createHandler, createSubscriptionHandler } from '../internal/utils/client'
+import { type HandlerOptions, type SSEOptions, type WSOptions, createHandler, createSubscriptionHandler } from '../internal/utils/client'
 import type { UseGqfSchema } from '../internal/types/composables/schema'
-import type { RequestHandler, SubscriptionHandler, WithGqfClient } from '../internal/types/composables/with-client'
+import type { WithGqfClient, WithGqfClientOptions } from '../internal/types/composables/with-client'
 import { useAsyncData } from '#app/composables/asyncData'
 import { useState } from '#app'
 import { type MaybeRefOrGetter, readonly, toValue, watch } from '#imports'
 
 type DefaultSubscriptionHandlerOptions = WSOptions & SSEOptions
-type DefaultHandlerOptions = Omit<HandlerOptions, 'url'>
+type DefaultHandlerOptions = Omit<HandlerOptions, ''>
 
 export function withGqfClient<
   Context = DefaultHandlerOptions,
@@ -19,22 +19,7 @@ export function withGqfClient<
   Endpoint extends Endpoints = string,
 >(
   schema: UseGqfSchema<Endpoint>,
-  /**
-   * Custom request handler.
-   * By default it send the request using `$fetch`.
-   */
-  handlerDef: RequestHandler<Context> | DefaultHandlerOptions = {},
-  /**
-   * Custom subscription handler.
-   * By default it uses `sse`.
-   * - `SubscriptionHandler<Context>`: use custom subscription handler.
-   * - `{ type: 'SSE', sseOptions?: SSEOptions }`: use `sse` with custom options.
-   * - `{ type: 'WS', wsOptions?: WSOptions }`: use `ws` with custom options.
-   */
-  subscriptionHandlerDef:
-    | SubscriptionHandler<SubscriptionContext>
-    | CreateSubscriptionHandlerOptions
-  = {},
+  options?: WithGqfClientOptions<Context, SubscriptionContext>,
 ): WithGqfClient<Context, Endpoint> {
   const url = schema.endpoint
 
@@ -42,13 +27,13 @@ export function withGqfClient<
     throw new Error('Endpoint is not defined')
   }
 
-  const handler = typeof handlerDef === 'function'
-    ? handlerDef
-    : createHandler(handlerDef)
+  const handler = typeof options?.handler === 'function'
+    ? options.handler
+    : createHandler(options?.handler?.options)
 
-  const subscriptionHandler = typeof subscriptionHandlerDef === 'function'
-    ? subscriptionHandlerDef
-    : createSubscriptionHandler(subscriptionHandlerDef)
+  const subscriptionHandler = typeof options?.subscription?.handler === 'function'
+    ? options.subscription.handler
+    : createSubscriptionHandler(options?.subscription ?? {})
 
   return {
     defineOperation: (def, context) => {

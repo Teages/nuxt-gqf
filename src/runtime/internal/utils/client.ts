@@ -3,8 +3,9 @@ import { print } from 'graphql'
 import { type ClientOptions as WSClientOptions, createClient as createWSClient } from 'graphql-ws'
 import { destr } from 'destr'
 import type { FetchOptions } from 'ofetch'
+import { type MaybeRefOrGetter, toValue } from '#imports'
 
-export function createHandler(options: FetchOptions) {
+export function createHandler(options?: HandlerOptions) {
   return async <
     TData,
     TVars extends Record<string, unknown>,
@@ -15,16 +16,19 @@ export function createHandler(options: FetchOptions) {
       type: 'query' | 'mutation'
       url: string
     },
-    context: FetchOptions,
+    context?: HandlerOptions,
   ) => {
+    const opts = toValue(options?.fetchOptions)
+    const ctx = toValue(context?.fetchOptions)
+
     const headers = {
-      ...options.headers,
-      ...context.headers,
+      ...opts?.headers,
+      ...ctx?.headers,
       'Content-Type': 'application/json',
     }
     const res = await $fetch<{ data: TData }>(query.url, {
-      ...options,
-      ...context,
+      ...opts,
+      ...ctx,
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -39,10 +43,15 @@ export function createHandler(options: FetchOptions) {
 export function createSubscriptionHandler(
   options: CreateSubscriptionHandlerOptions,
 ): SubscriptionHandler {
-  if (options.type === 'WS') {
+  if (options.handler === 'ws') {
     return (func, query, context?: WSOptions) => {
+      const ctx = {
+        ...toValue(options.options?.wsOptions),
+        ...toValue(context?.wsOptions),
+      }
+
       const client = createWSClient({
-        ...context,
+        ...ctx,
         url: query.url,
       });
 
@@ -69,11 +78,16 @@ export function createSubscriptionHandler(
     }
   }
   return (func, query, context?: SSEOptions) => {
+    const ctx = {
+      ...toValue(options.options?.sseOptions),
+      ...toValue(context?.sseOptions),
+    }
+
     const url = new URL(query.url)
     url.searchParams.set('query', print(query.document))
     url.searchParams.set('variables', JSON.stringify(query.variables ?? {}))
 
-    const source = new EventSource(url, context)
+    const source = new EventSource(url, ctx)
 
     source.addEventListener('next', ({ data }) => {
       func.update(
@@ -92,18 +106,24 @@ export function createSubscriptionHandler(
 }
 
 export type CreateSubscriptionHandlerOptions = {
-  type?: 'SSE'
-  sseOptions?: SSEOptions
+  handler?: 'sse'
+  options?: SSEOptions
 } | {
-  type: 'WS'
-  wsOptions?: WSOptions
+  handler: 'ws'
+  options?: WSOptions
 }
 
-export type HandlerOptions = FetchOptions
+export interface HandlerOptions {
+  fetchOptions?: MaybeRefOrGetter<Omit<FetchOptions, 'url'>>
+}
 
-export type SSEOptions = EventSourceInit
+export interface SSEOptions {
+  sseOptions?: MaybeRefOrGetter<EventSourceInit>
+}
 
-export type WSOptions = Omit<WSClientOptions, 'url'>
+export interface WSOptions {
+  wsOptions?: MaybeRefOrGetter<Omit<WSClientOptions, 'url'>>
+}
 
 export type SubscriptionHandler = <
   TData,
