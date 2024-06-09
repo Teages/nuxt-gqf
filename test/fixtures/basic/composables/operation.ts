@@ -3,7 +3,7 @@ import { request } from 'graphql-request'
 const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
 
 const schema = useGqfSchema(endpoint)
-const { defineAsyncOperation } = withGqfClient(
+const { defineAsyncQuery } = withGqfClient(
   schema,
   ({ url, document, variables }, _context) => {
     // @ts-expect-error ignore var not match error
@@ -18,7 +18,7 @@ export const userFragment = schema
   ])
 export type RequireUserFragment = RequireQueryPart<typeof userFragment>
 
-export const useAsyncUser = defineAsyncOperation(
+export const useAsyncUser = defineAsyncQuery(
   gqf => gqf('query QueryUser', {
     id: 'ID',
   }, [{

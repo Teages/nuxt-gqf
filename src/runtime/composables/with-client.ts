@@ -51,11 +51,11 @@ export function withGqfClient<
         },
       )
     },
-    defineAsyncOperation: (def, context) => {
+    defineAsyncQuery: (def, context) => {
       const document = typeof def === 'function' ? def(schema.gqf, schema.$enum) : def
       const type = getDocumentType(document)
-      if (type === 'subscription') {
-        throw new Error('Subscriptions are not supported')
+      if (type !== 'query') {
+        throw new Error('Operation is not a query.')
       }
 
       return (
@@ -82,11 +82,11 @@ export function withGqfClient<
         )
       }
     },
-    defineLazyAsyncOperation: (def, context) => {
+    defineLazyAsyncQuery: (def, context) => {
       const document = typeof def === 'function' ? def(schema.gqf, schema.$enum) : def
       const type = getDocumentType(document)
-      if (type === 'subscription') {
-        throw new Error('Subscriptions are not supported')
+      if (type !== 'query') {
+        throw new Error('Operation is not a query.')
       }
 
       return (

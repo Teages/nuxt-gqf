@@ -1,6 +1,6 @@
 const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
 const schema = useGqfSchema(endpoint)
-const { defineAsyncOperation } = withGqfClient(
+const { defineAsyncQuery } = withGqfClient(
   schema,
 )
 
@@ -11,7 +11,7 @@ export const userFragment = schema
   ])
 export type RequireUserFragment = RequireQueryPart<typeof userFragment>
 
-export const useAsyncUser = defineAsyncOperation(
+export const useAsyncUser = defineAsyncQuery(
   gqf => gqf('query QueryUser', {
     id: 'ID',
   }, [{
@@ -19,7 +19,7 @@ export const useAsyncUser = defineAsyncOperation(
   }]),
 )
 
-export const useHello = defineAsyncOperation(
+export const useHello = defineAsyncQuery(
   gqf => gqf('query QueryHello', {
     name: 'String',
   }, [{

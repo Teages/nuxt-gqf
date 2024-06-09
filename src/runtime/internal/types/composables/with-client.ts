@@ -41,8 +41,8 @@ export interface WithGqfClient<
   Endpoint extends Endpoints = string,
 > {
   defineOperation: DefineOperation<Context, Endpoint>
-  defineAsyncOperation: DefineAsyncOperation<Context, Endpoint>
-  defineLazyAsyncOperation: DefineAsyncOperation<Context, Endpoint>
+  defineAsyncQuery: DefineAsyncQuery<Context, Endpoint>
+  defineLazyAsyncQuery: DefineAsyncQuery<Context, Endpoint>
   defineSubscription: DefineSubscription<Context, Endpoint>
 }
 
@@ -62,7 +62,7 @@ export interface DefineOperation<
   ): DefineOperationReturn<Promise<TData>, TVars, Context>
 }
 
-export interface DefineAsyncOperation<
+export interface DefineAsyncQuery<
   Context,
   Endpoint extends Endpoints = string,
 > {
@@ -81,7 +81,7 @@ export interface DefineAsyncOperation<
       | TypedDocumentNode<TData, TVars>
     ),
     context?: Context,
-  ): DefineAsyncOperationReturn<
+  ): DefineAsyncQueryReturn<
     AsyncData<PickFrom<DataT, PickKeys> | DefaultT, Error | null>,
     TVars,
     AsyncDataOptions<TData | undefined, DataT, PickKeys, DefaultT> & { context?: Context }
@@ -102,7 +102,7 @@ export interface DefineAsyncOperation<
       | TypedDocumentNode<TData, TVars>
     ),
     context?: Context,
-  ): DefineAsyncOperationReturn<
+  ): DefineAsyncQueryReturn<
     AsyncData<PickFrom<DataT, PickKeys> | DefaultT, Error | null>,
     TVars,
     AsyncDataOptions<TData | undefined, DataT, PickKeys, DefaultT> & { context?: Context }
@@ -130,12 +130,12 @@ export type DefineOperationReturn<Ret, TVars, Context> =
     ? (variables?: TVars, context?: Context) => Ret
     : (variables: TVars, context?: Context) => Ret
 
-export type DefineAsyncOperationReturn<Ret, TVars, Options> =
+export type DefineAsyncQueryReturn<Ret, TVars, Options> =
   Record<string, never> extends TVars
-    ? DefineAsyncOperationReturnFnE<Ret, TVars, Options>
-    : DefineAsyncOperationReturnFn<Ret, TVars, Options>
+    ? DefineAsyncQueryReturnFnE<Ret, TVars, Options>
+    : DefineAsyncQueryReturnFn<Ret, TVars, Options>
 
-export interface DefineAsyncOperationReturnFn<Ret, TVars, Options> {
+export interface DefineAsyncQueryReturnFn<Ret, TVars, Options> {
   (
     variables: TVars,
     options?: Omit<Options, 'watch'> // Force to use getter if watched.
@@ -145,7 +145,7 @@ export interface DefineAsyncOperationReturnFn<Ret, TVars, Options> {
     options?: Options
   ): Ret
 }
-export interface DefineAsyncOperationReturnFnE<Ret, TVars, Options> {
+export interface DefineAsyncQueryReturnFnE<Ret, TVars, Options> {
   (
     variables?: TVars,
     options?: Omit<Options, 'watch'> // Force to use getter if watched.
