@@ -47,7 +47,9 @@ export function buildApp() {
       }
 
       const errors = validate(args.schema, args.document)
-      if (errors.length) { return errors }
+      if (errors.length) {
+        return errors
+      }
       return args
     },
   }, wsServer)
