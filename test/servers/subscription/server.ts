@@ -8,7 +8,7 @@ import { schema } from './schema'
 
 const port = 64961
 
-export function buildApp() {
+function buildApp() {
   const yoga = createYoga({
     graphiql: {
       subscriptionsProtocol: 'WS',

@@ -54,6 +54,7 @@
     "get-port-please": "^3.1.2",
     "graphql-yoga": "^5.3.1",
     "nuxt": "^3.11.2",
+    "tsx": "^4.15.1",
     "typescript": "latest",
     "vitest": "^1.6.0",
     "vue-tsc": "^2.0.19",
