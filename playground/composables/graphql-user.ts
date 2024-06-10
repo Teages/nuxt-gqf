@@ -1,3 +1,5 @@
+import type { RequireQueryPart } from '#gqf'
+
 const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
 const schema = useGqfSchema(endpoint)
 const { defineAsyncQuery } = withGqfClient(schema, {

@@ -1,5 +1,5 @@
 import { addImportsDir, addServerImportsDir, addTemplate, createResolver, defineNuxtModule, useLogger } from '@nuxt/kit'
-import type { Config } from '@teages/gqf/cli'
+import type { ClientConfig } from '@teages/gqf/cli'
 import { useTypeVfs } from './utils/vfs'
 import { syncSchema } from './utils/sync'
 
@@ -7,7 +7,7 @@ export interface ModuleOptions {
   /**
    * The list of clients to generate types for.
    */
-  clients?: Config['clients']
+  clients?: ClientConfig[]
   /**
    * Disable console output.
    */
@@ -34,7 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
     const logger = useLogger('nuxt-gqf', { level: options.silent ? 999 : undefined })
 
     addImportsDir(resolver.resolve('./runtime/composables'))
-    addImportsDir(resolver.resolve('./runtime/utils'))
+    // addImportsDir(resolver.resolve('./runtime/utils'))
     addServerImportsDir(resolver.resolve('./runtime/server/utils'))
 
     const vfs = useTypeVfs('types/gqf-schema')
@@ -45,6 +45,8 @@ export default defineNuxtModule<ModuleOptions>({
       ...nuxt.options.nitro.typescript.tsConfig.include ?? [],
       './types/gqf-schema/**/*',
     ]
+
+    nuxt.options.alias['#gqf'] = resolver.resolve('./runtime')
 
     if (options.clients && options.clients.length > 0) {
       logger.start('Syncing GraphQL schema')

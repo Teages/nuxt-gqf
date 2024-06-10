@@ -1,4 +1,4 @@
-import type { ResultOf, VariablesOf } from '@graphql-typed-document-node/core'
+import type { ResultOf, VariablesOf } from '@teages/gqf/typed'
 import { hash } from 'ohash'
 import { type DocumentNode, Kind } from 'graphql'
 import type { ComputedRef } from 'vue'

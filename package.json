@@ -30,7 +30,6 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@graphql-typed-document-node/core": "^3.2.0",
     "@nuxt/kit": "^3.11.2",
     "@teages/gqf": "^0.2.0",
     "destr": "^2.0.3",

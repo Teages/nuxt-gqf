@@ -1,4 +1,4 @@
-import type { Config } from '@teages/gqf/cli'
+import type { ClientConfig } from '@teages/gqf/cli'
 import { sync } from '@teages/gqf/cli'
 
 interface SyncResult {
@@ -11,7 +11,7 @@ interface SyncResult {
   failed: string[]
 }
 
-export async function syncSchema(clients: Config['clients']): Promise<SyncResult> {
+export async function syncSchema(clients: ClientConfig[]): Promise<SyncResult> {
   const output = await sync({
     clients,
     silent: true,

@@ -1,4 +1,4 @@
-import type { ResultOf, TypedDocumentNode, VariablesOf } from '@graphql-typed-document-node/core'
+import type { ResultOf, TypedQueryDocumentNode, VariablesOf } from '@teages/gqf/typed'
 import { print } from 'graphql'
 import { type ClientOptions as WSClientOptions, createClient as createWSClient } from 'graphql-ws'
 import { destr } from 'destr'
@@ -11,7 +11,7 @@ export function createHandler(options?: HandlerOptions) {
     TVars extends Record<string, unknown>,
   > (
     query: {
-      document: TypedDocumentNode<TData, TVars>
+      document: TypedQueryDocumentNode<TData, TVars>
       variables: TVars
       type: 'query' | 'mutation'
       url: string
@@ -161,7 +161,7 @@ export type SubscriptionHandler = <
     close: (error?: any) => void
   },
   query: {
-    document: TypedDocumentNode<TData, TVars>
+    document: TypedQueryDocumentNode<TData, TVars>
     variables: TVars
     type: 'subscription'
     url: string
