@@ -4,8 +4,17 @@ import { useTypeVfs } from './utils/vfs'
 import { syncSchema } from './utils/sync'
 
 export interface ModuleOptions {
+  /**
+   * The list of clients to generate types for.
+   */
   clients?: Config['clients']
+  /**
+   * Disable console output.
+   */
   silent?: boolean
+  /**
+   * Warn when a schema is not found. Only works in vue.
+   */
   warnNotFound?: boolean
 }
 
@@ -37,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
       './types/gqf-schema/**/*',
     ]
 
-    if (options.clients) {
+    if (options.clients && options.clients.length > 0) {
       logger.start('Syncing GraphQL schema')
       const result = await syncSchema(options.clients)
 
@@ -50,6 +59,9 @@ export default defineNuxtModule<ModuleOptions>({
       if (result.success.length > 0) {
         logger.success(`Synced GraphQL schema from ${result.success.length} ${result.success.length > 1 ? 'clients' : 'client'}`)
       }
+    }
+    else {
+      logger.warn('nuxt-gqf is installed but no clients were configured.')
     }
 
     // config for schema checking
