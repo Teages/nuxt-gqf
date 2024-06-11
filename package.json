@@ -58,5 +58,8 @@
     "vitest": "^1.6.0",
     "vue-tsc": "^2.0.21",
     "ws": "^8.17.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
