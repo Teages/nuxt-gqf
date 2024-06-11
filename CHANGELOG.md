@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.2
+
+[compare changes](https://github.com/Teages/nuxt-gqf/compare/v0.0.1...v0.0.2)
+
+### 🏡 Chore
+
+- Make the package public ([eeed679](https://github.com/Teages/nuxt-gqf/commit/eeed679))
+
+### ❤️ Contributors
+
+- Teages ([@Teages](http://github.com/Teages))
+
 ## v0.0.1
 
 
