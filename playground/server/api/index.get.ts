@@ -5,7 +5,7 @@ export default defineLazyEventHandler(() => {
   const endpoint = 'https://graphql-test.teages.xyz/graphql-user'
 
   const { gqf } = useGqfSchema(endpoint)
-  const query = gqf('query FetchAnime', [{
+  const query = gqf('query FetchUser', [{
     users: $ => $([
       'id',
       'name',

@@ -1,4 +1,4 @@
-import { addImportsDir, addServerImportsDir, addTemplate, createResolver, defineNuxtModule, useLogger } from '@nuxt/kit'
+import { addImportsDir, addServerImportsDir, createResolver, defineNuxtModule, updateRuntimeConfig, useLogger } from '@nuxt/kit'
 import type { ClientConfig } from '@teages/gqf/cli'
 import { useTypeVfs } from './utils/vfs'
 import { syncSchema } from './utils/sync'
@@ -12,10 +12,6 @@ export interface ModuleOptions {
    * Disable console output.
    */
   silent?: boolean
-  /**
-   * Warn when a schema is not found. Only works in vue.
-   */
-  warnNotFound?: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -26,7 +22,6 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     clients: [],
     silent: false,
-    warnNotFound: true,
     // autoLoad: true,
   },
   async setup(options, nuxt) {
@@ -66,17 +61,14 @@ export default defineNuxtModule<ModuleOptions>({
       logger.warn('nuxt-gqf is installed but no clients were configured.')
     }
 
-    // config for schema checking
-    addTemplate({
-      filename: 'gqf.config.mjs',
-      getContents: () => nuxt.options.dev
-        ? `export default ${JSON.stringify({
-          clients: options.clients?.map(
-            c => typeof c === 'object' ? c.url : c,
-          ) ?? [],
-          warnNotFound: options.warnNotFound,
-        }, null, 2)}`
-        : `export default {}`,
+    updateRuntimeConfig({
+      public: {
+        gqf: {
+          clientList: nuxt.options.dev
+            ? options.clients?.map(c => typeof c === 'object' ? c.url : c) ?? []
+            : undefined,
+        },
+      },
     })
   },
 })

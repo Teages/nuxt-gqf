@@ -1,6 +1,7 @@
 import type { $enum } from '@teages/gqf'
 import { useSchema } from '@teages/gqf'
 import type { DollarEnum, Endpoints, ExactEndpoints, LoadGQF, LoadGQP } from '../../internal/utils/schema'
+import { useRuntimeConfig } from '#build/types/nitro-imports'
 
 export interface ServerUseSchema<
   TEndpoint extends Endpoints,
@@ -26,8 +27,21 @@ export interface ServerUseSchemaWithWarning {
 
 export function useGqfSchema(): ServerUseSchema<string>
 export function useGqfSchema<T extends ExactEndpoints>(endpoint: T): ServerUseSchema<T>
+/**
+ * @deprecated The schema is not typed.
+ */
 export function useGqfSchema(endpoint: string): ServerUseSchemaWithWarning
 export function useGqfSchema<T extends Endpoints>(endpoint?: T): ServerUseSchema<T> {
+  if (import.meta.dev && endpoint) {
+    // Check if the schema is defined in the config
+    (async () => {
+      const clients = useRuntimeConfig().public.gqf.clientList as Array<string> | undefined
+      if (clients && !clients.includes(endpoint)) {
+        console.warn(`useGqfSchema: "${endpoint}" is not typed, please add it to gqf.clients in your nuxt config`)
+      }
+    })()
+  }
+
   const schema = useSchema(endpoint) as {
     gqf: LoadGQF<T>
     gqp: LoadGQP<T>
